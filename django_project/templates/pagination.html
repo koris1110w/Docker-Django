@@ -3,7 +3,7 @@
 <nav aria-label="ページ送り" class="flex justify-center items-center">
     <ul class="pagination">
       <!--　左端マークの処理（<<マークの設定と選択ページが左端（１）ならばリンクを外す）-->
-      {% if  page_obj.has_previous %}
+      {% comment %} {% if  page_obj.has_previous %}
         <li
           class="page-item min-h-[38px] min-w-[38px] inline-flex justify-center items-center gap-x-1.5 text-sm first:rounded-s-lg last:rounded-e-lg border border-gray-200 text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:border-gray-700 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10">
           <a class="page-link py-2 px-2.5" href="?{% url_replace request 'page' page_obj.previous_page_number %}">&laquo;</a>
@@ -50,6 +50,24 @@
           class="page-item disabled min-h-[38px] min-w-[38px] 5 inline-flex justify-center items-center gap-x-1.5 text-sm first:rounded-s-lg last:rounded-e-lg border border-gray-200 text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:border-gray-700 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10">
           <a class="page-link py-2 px-2." href=''>&raquo;</a>
         </li>
-      {% endif %}
+      {% endif %} {% endcomment %}
+
+      <li v-if="page != 1" class="page-item min-h-[38px] min-w-[38px] inline-flex justify-center items-center gap-x-1.5 text-sm first:rounded-s-lg last:rounded-e-lg border border-gray-200 text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:border-gray-700 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10">
+        <button class="page-link py-2 px-2.5" @click="getPage(page - 1)">&laquo;</button>
+      </li>
+      <li v-else class="page-item disabled min-h-[38px] min-w-[38px] inline-flex justify-center items-center gap-x-1.5 text-sm first:rounded-s-lg last:rounded-e-lg border border-gray-200 text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:border-gray-700 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10">
+        <button disabled class="page-link py-2 px-2.5">&laquo;</button>
+      </li>
+
+      <li v-for="n in page_count" :key="n" class="page-item active min-h-[38px] min-w-[38px] inline-flex justify-center items-center gap-x-1.5 text-sm first:rounded-s-lg last:rounded-e-lg border border-gray-200 text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:border-gray-700 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10">
+        <button class="page-link py-2 px-2.5" @click="getPage(n)">[[ n ]]</button>
+      </li>
+
+      <li v-if="page != page_count" class="page-item min-h-[38px] min-w-[38px] inline-flex justify-center items-center gap-x-1.5 text-sm first:rounded-s-lg last:rounded-e-lg border border-gray-200 text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:border-gray-700 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10">
+        <button class="page-link py-2 px-2.5" @click="getPage(page + 1)">&raquo;</button>
+      </li>
+      <li v-else class="page-item disabled min-h-[38px] min-w-[38px] inline-flex justify-center items-center gap-x-1.5 text-sm first:rounded-s-lg last:rounded-e-lg border border-gray-200 text-gray-800 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 disabled:opacity-50 disabled:pointer-events-none dark:border-gray-700 dark:text-white dark:hover:bg-white/10 dark:focus:bg-white/10">
+        <button disabled class="page-link py-2 px-2.5">&raquo;</button>
+      </li>
     </ul>
   </nav>

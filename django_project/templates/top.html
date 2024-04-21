@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <!-- スライダーのコンテナ -->
+<div id="app">
   <h3 class="my-4 text-xl font-semibold text-gray-300">
     最新ランキング
   </h3>
@@ -17,7 +17,188 @@
       </h3>
     </a>
   </div>
-
   {% include "riddle_list.html" %}
+</div>
 {% endblock content %}
-
+{% block script %}
+<script>
+  const app = Vue.createApp({
+    data() {
+      return {
+        riddle_list: [],
+        page: 1,
+        count: 0,
+        page_count: 0,
+        selectType: [],
+        selectTime: [],
+        selectLevel: [],
+        selectWord: "",
+        selectOrder: "",
+        filterKwargs: "",
+        userId: "{{ user.id }}",
+        typeSet: [
+          {
+            title: "WEB",
+            value: "web"
+          },
+          {
+            title: "LINE",
+            value: "line"
+          }
+        ],
+        timeSet: [
+          {
+            title: "〜15分",
+            value: "10"
+          },
+          {
+            title: "15分〜45分",
+            value: "30"
+          },
+          {
+            title: "45分〜90分",
+            value: "60"
+          },
+          {
+            title: "90分〜180分",
+            value: "120"
+          },
+          {
+            title: "180分〜",
+            value: "300"
+          },
+        ],
+        levelSet: [
+          {
+            title: "初級",
+            value: "1"
+          },
+          {
+            title: "中級",
+            value: "2"
+          },
+          {
+            title: "上級",
+            value: "3"
+          },
+        ],
+        filterSet: [
+          {
+            title: "新着順",
+            value: "created_at"
+          },
+          {
+            title: "難易度順",
+            value: "level"
+          },
+          {
+            title: "プレイ数順",
+            value: "playings"
+          },
+          {
+            title: "評価順",
+            value: "rating"
+          },
+        ]
+      }
+    },
+    //ムスタッシュ記法を変更
+    compilerOptions: {
+      delimiters: ['[[', ']]'],
+    },
+    // HTMLの読み込み完了時に実行される
+    mounted() {
+      this.getRiddleList()
+    },
+    // これは任意の関数
+    methods: {
+      getTypeDisplay(type) {
+        return this.typeSet.find(el => el.value == type).title;
+      },
+      getTimeDisplay(time) {
+        return this.timeSet.find(el => el.value == time).title;
+      },
+      getLevelDisplay(level) {
+        return this.levelSet.find(el => el.value == level).title;
+      },
+      getFilterKwargs() {
+        this.filterKwargs = "?page=" + String(this.page);
+        if(this.selectType != []) {
+          for(var type of this.selectType) {
+            if(this.filterKwargs == "") {
+              this.filterKwargs += "?type="
+            }else{
+              this.filterKwargs += "&type="
+            }
+            this.filterKwargs += type
+          }
+        }
+        if(this.selectTime != []) {
+          for(var time of this.selectTime) {
+            if(this.filterKwargs == "") {
+              this.filterKwargs += "?time="
+            }else{
+              this.filterKwargs += "&time="
+            }
+            this.filterKwargs += time
+          }
+        }
+        if(this.selectLevel != []) {
+          for(var level of this.selectLevel) {
+            if(this.filterKwargs == "") {
+              this.filterKwargs += "?level="
+            }else{
+              this.filterKwargs += "&level="
+            }
+            this.filterKwargs += level
+          }
+        }
+        if(this.selectWord != "") {
+          if(this.filterKwargs == "") {
+            this.filterKwargs += "?word="
+          }else{
+            this.filterKwargs += "&word="
+          }
+          this.filterKwargs += this.selectWord
+        }
+      },
+      getRiddleList() {
+        this.getFilterKwargs();
+        console.log(this.filterKwargs)
+        axios.get(`/api/v2/riddle_list/${this.filterKwargs}`)
+          .then((res) => {
+            console.log(res)
+            this.riddle_list = res.data.results
+            this.count = res.data.count
+            this.page_count = Math.ceil(this.count / 2)
+          })
+      },
+      async bookmarkRiddle(pk) {
+        const params = ""
+        await fetch(`/api/v2/bookmark/${pk}/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': "{{ csrf_token }}",
+          },
+          body: params
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+        this.getRiddleList();
+      },
+      getBookmarked(riddle) {
+        return riddle.bookmarks.includes(Number(this.userId));
+      }
+    }
+  })
+  app.component('star-rating', VueStarRating.default);
+  app.use(VueChart.default);
+  app.mount('#app');
+</script>
+{% endblock script %}

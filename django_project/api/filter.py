@@ -14,15 +14,15 @@ class RiddleFilter(filters.FilterSet):
     time = filters.MultipleChoiceFilter(choices=models.TIME_SET)
     level = filters.MultipleChoiceFilter(choices=models.LEVEL_SET)
     word = filters.CharFilter(method='wordFilter')
-    order = filters.CharFilter(method='order')
+    order = filters.CharFilter(method='orderFilter')
 
     class Meta:
         model = models.RiddleModel
-        fields = ['type','time','level','word',]
+        fields = ['type','time','level','word','order',]
 
     def wordFilter(self,queryset,name,value):
         #ここでOR検索を入れる。fieldsのcustomerNameに入ってきた値を利用
         return queryset.filter(Q(name__icontains=value)|Q(description__icontains=value))
     
-    def order(self,queryset,name,value):
-        return queryset.order_by(value)
+    def orderFilter(self,queryset,name,value):
+        return queryset.order_by(value).reverse()

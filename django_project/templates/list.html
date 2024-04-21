@@ -2,221 +2,267 @@
 {% load myatag %}
 
 {% block content %}
-  <form method="GET" action="">
-    <div class="max-w-[85rem] px-6 mx-auto mt-5 grid grid-cols-2 lg:grid-cols-6">
-      <div class="relative cols-span-1 m-2">
-        {{ form.name }}
-        <label class="absolute top-0 start-0 p-4 h-full truncate pointer-events-none transition ease-in-out duration-100 border border-transparent dark:text-white peer-disabled:opacity-50 peer-disabled:pointer-events-none
-          peer-focus:text-xs
-          peer-focus:-translate-y-1.5
-          peer-focus:text-gray-500
-          peer-[:not(:placeholder-shown)]:text-xs
-          peer-[:not(:placeholder-shown)]:-translate-y-1.5
-          peer-[:not(:placeholder-shown)]:text-gray-500"
-               for="{{ form.level.id_for_label }}"
-        >{{ form.name.label }}
-        </label>
-      </div>
-      <div class="relative px-2 mt-2 cols-span-1">
-        <button id="dropdownBgHoverButton type" data-dropdown-toggle="dropdownType"
-          class="w-full p-4 text-center inline-flex justify-between items-center border-gray-200 rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
-          type="button">
-          {{ form.type.label }}
-          <span id="typeSelected"></span>
-          <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-          </svg>
-        </button>
-        <!-- Dropdown menu -->
-        <div id="dropdownType"
-             class="absolute hidden z-10 w-48 bg-white rounded-lg shadow dark:bg-gray-700 text-sm text-gray-700 dark:text-gray-200">
-          {% for choice in form.type %}
-            <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-              {{ choice }}
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-      <div class="relative px-2 mt-2 cols-span-1">
-        <button id="dropdownBgHoverButton" data-dropdown-toggle="dropdownTime"
-          class="w-full p-4 text-center inline-flex justify-between items-center border-gray-200 rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
-          type="button">
-          {{ form.time.label }}
-          <span id="timeSelected"></span>
-          <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-          </svg>
-        </button>
-        <!-- Dropdown menu -->
-        <div id="dropdownTime"
-             class="absolute hidden z-10 w-48 bg-white rounded-lg shadow dark:bg-gray-700 text-sm text-gray-700 dark:text-gray-200">
-          {% for choice in form.time %}
-            <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-              {{ choice }}
-            </div>
-          {% endfor %}
-        </div>
-
-      </div>
-      <div class="relative px-2 mt-2 cols-span-1">
-        <button id="dropdownBgHoverButton" data-dropdown-toggle="dropdownLevel"
-          class="w-full p-4 text-center inline-flex justify-between items-center border-gray-200 rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
-          type="button">
-          {{ form.level.label }}
-          <span id="levelSelected"></span>
-          <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-          </svg>
-        </button>
-        <!-- Dropdown menu -->
-        <div id="dropdownLevel"
-             class="absolute hidden z-10 w-48 bg-white rounded-lg shadow dark:bg-gray-700 text-sm text-gray-700 dark:text-gray-200">
-          {% for choice in form.level %}
-            <div class="flex items-center p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600">
-              {{ choice }}
-            </div>
-          {% endfor %}
-        </div>
-      </div>
-      <div class="relative cols-span-1 m-2">
-        {{ form.order }}
-        <label class="absolute top-0 start-0 p-4 h-full truncate pointer-events-none transition ease-in-out duration-100 border border-transparent dark:text-white peer-disabled:opacity-50 peer-disabled:pointer-events-none
-          peer-focus:text-xs
-          peer-focus:-translate-y-1.5
-          peer-focus:text-gray-500
-          peer-[:not(:placeholder-shown)]:text-xs
-          peer-[:not(:placeholder-shown)]:-translate-y-1.5
-          peer-[:not(:placeholder-shown)]:text-gray-500"
-               for="{{ form.level.id_for_label }}"
-        >{{ form.order.label }}
-        </label>
-      </div>
-      <div class="relative cols-span-1 m-2">
-        <button type="submit"
-                class="py-2 px-3 h-full w-full inline-flex items-center justify-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
-          絞り込み
-        </button>
+<div id="app">
+  <div class="max-w-[85rem] px-6 mx-auto mt-5 grid grid-cols-2 lg:grid-cols-6">
+    <!-- ワード検索 -->
+    <div class="mt-2 pr-2">
+      <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">検索</label>
+      <div class="relative">
+          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+              <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
+              </svg>
+          </div>
+          <input type="search" id="search" v-model="selectWord" class="block w-full p-4 ps-10 text-sm text-gray-900 rounded-lg bg-slate-900 dark:placeholder-gray-400 dark:text-white" placeholder="検索"/>
       </div>
     </div>
-  </form>
-  <!-- End Floating Select -->
-  <!-- Card Blog -->
+    <!-- タイプ検索-->
+    <div class="relative px-2 cols-span-1 mt-2">
+      <button id="dropdownBgHoverButton" data-dropdown-toggle="dropdownType"
+        class="w-full p-4 text-center inline-flex justify-between items-center border-gray-200 rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
+        type="button">
+        <span>タイプ</span>
+        <span>[[ selectType ]]</span>
+        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+        </svg>
+      </button>
+      <div id="dropdownType" class="absolute hidden z-10 w-48 bg-white rounded-lg shadow dark:bg-slate-900 text-sm text-gray-700 dark:text-gray-200">
+        <ul class="p-3 space-y-3 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownCheckboxButton">
+          <li v-for="item in typeSet" :key="item.value">
+            <div class="flex items-center">
+              <input type="checkbox" v-model="selectType" :value="item.value" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+              <label class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">[[ item.title ]]</label>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- 時間検索 -->
+    <div class="relative px-2 cols-span-1 mt-2">
+      <button id="dropdownBgHoverButton" data-dropdown-toggle="dropdownTime"
+        class="w-full p-4 text-center inline-flex justify-between items-center border-gray-200 rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
+        type="button">
+        <span>時間</span>
+        <span>[[ selectTime ]]</span>
+        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+        </svg>
+      </button>
+      <div id="dropdownTime" class="absolute hidden z-10 w-48 bg-white rounded-lg shadow dark:bg-slate-900 text-sm text-gray-700 dark:text-gray-200">
+        <ul class="p-3 space-y-3 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownCheckboxButton">
+          <li v-for="item in timeSet" :key="item.value">
+            <div class="flex items-center">
+              <input type="checkbox" v-model="selectTime" :value="item.value" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+              <label class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">[[ item.title ]]</label>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- 難易度検索 -->
+    <div class="relative px-2 cols-span-1 mt-2">
+      <button id="dropdownBgHoverButton" data-dropdown-toggle="dropdownLevel"
+        class="w-full p-4 text-center inline-flex justify-between items-center border-gray-200 rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
+        type="button">
+        <span>難易度</span>
+        <span>[[ selectLevel ]]</span>
+        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+        </svg>
+      </button>
+      <div id="dropdownLevel" class="absolute hidden z-10 w-48 bg-white rounded-lg shadow dark:bg-slate-900 text-sm text-gray-700 dark:text-gray-200">
+        <ul class="p-3 space-y-3 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownCheckboxButton">
+          <li v-for="item in levelSet" :key="item.value">
+            <div class="flex items-center">
+              <input type="checkbox" v-model="selectLevel" :value="item.value" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
+              <label class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">[[ item.title ]]</label>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <!-- 並び替え -->
+    <div class="cols-span-1 m-2">
+      <select id="order" v-model="selectOrder" class="relative border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:bg-slate-900 dark:text-gray-300 dark:focus:ring-blue-500 dark:focus:border-blue-500">
+        <option v-for="item in orderSet" :key="item.value" :value="item.value">[[ item.title ]]</option>
+      </select>
+    </div>
+    <div class="relative cols-span-1 p-2">
+      <button type="button" @click="getRiddleList" class="py-2 px-3 h-full w-full inline-flex items-center justify-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+        絞り込み
+      </button>
+    </div>
+  </div>
   {% include "riddle_list.html" %}
   {% include "pagination.html" %}
-  <!-- End Pagination -->
-  <script>
-    const typeOptions = document.getElementsByName("type")
-    const typeSelected = document.getElementById("typeSelected")
-    const timeOptions = document.getElementsByName("time")
-    const timeSelected = document.getElementById("timeSelected")
-    const levelOptions = document.getElementsByName("level")
-    const levelSelected = document.getElementById("levelSelected")
-    // 要素を追加する関数
-    const AddRemoveElm = () => {
-      for (let i = 0; timeOptions.length > i; i++) {
-        console.log(timeOptions[i].nextSibling)
-        timeOptions[i].addEventListener('change', function () {
-          // 選択して追加された要素を取得する
-          const selectedOptions = document.querySelectorAll(".selectedOption")
-          // チェックされたら要素を追加、外されたら削除
-          if (timeOptions[i].checked) {
-            const newElement = document.createElement("span")
-            newElement.setAttribute("class", "selectedOption")
-            // 任意のIDをvalueの値で入れておく
-            newElement.setAttribute("data-id", timeOptions[i].value)
-            newElement.innerHTML = timeOptions[i].nextSibling.textContent
-            timeSelected.appendChild(newElement)
-          } else {
-            selectedOptions.forEach((elm) => {
-              // valueの値とdata-idの値が一致するものを削除する
-              if (elm.getAttribute("data-id") === timeOptions[i].value) {
-                elm.remove()
-              }
-            })
-          }
-        })
-      }
-    }
-    AddRemoveElm()
-    // 要素を追加する関数
-    for (let i = 0; typeOptions.length > i; i++) {
-      console.log(typeOptions[i].nextSibling)
-      typeOptions[i].addEventListener('change', function () {
-        // 選択して追加された要素を取得する
-        const selectedOptions = document.querySelectorAll(".selectedOption")
-        // チェックされたら要素を追加、外されたら削除
-        if (typeOptions[i].checked) {
-          const newElement = document.createElement("span")
-          newElement.setAttribute("class", "selectedOption")
-          // 任意のIDをvalueの値で入れておく
-          newElement.setAttribute("data-id", typeOptions[i].value)
-          newElement.innerHTML = typeOptions[i].nextSibling.textContent
-          typeSelected.appendChild(newElement)
-        } else {
-          selectedOptions.forEach((elm) => {
-            // valueの値とdata-idの値が一致するものを削除する
-            if (elm.getAttribute("data-id") === typeOptions[i].value) {
-              elm.remove()
-            }
-          })
-        }
-      })
-    }
-    for (let i = 0; levelOptions.length > i; i++) {
-      console.log(levelOptions[i].nextSibling)
-      levelOptions[i].addEventListener('change', function () {
-        // 選択して追加された要素を取得する
-        const selectedOptions = document.querySelectorAll(".selectedOption")
-        // チェックされたら要素を追加、外されたら削除
-        if (levelOptions[i].checked) {
-          const newElement = document.createElement("span")
-          newElement.setAttribute("class", "selectedOption")
-          // 任意のIDをvalueの値で入れておく
-          newElement.setAttribute("data-id", levelOptions[i].value)
-          newElement.innerHTML = levelOptions[i].nextSibling.textContent
-          levelSelected.appendChild(newElement)
-        } else {
-          selectedOptions.forEach((elm) => {
-            // valueの値とdata-idの値が一致するものを削除する
-            if (elm.getAttribute("data-id") === levelOptions[i].value) {
-              elm.remove()
-            }
-          })
-        }
-      })
-    }
-    document.addEventListener("DOMContentLoaded", function() {
-      for (let i = 0; typeOptions.length > i; i++) {
-        if (typeOptions[i].checked) {
-          const newElement = document.createElement("span")
-          newElement.setAttribute("class", "selectedOption")
-          // 任意のIDをvalueの値で入れておく
-          newElement.setAttribute("data-id", typeOptions[i].value)
-          newElement.innerHTML = typeOptions[i].nextSibling.textContent
-          typeSelected.appendChild(newElement)
-        } 
-      }
-      for (let i = 0; timeOptions.length > i; i++) {
-        if (timeOptions[i].checked) {
-          const newElement = document.createElement("span")
-          newElement.setAttribute("class", "selectedOption")
-          // 任意のIDをvalueの値で入れておく
-          newElement.setAttribute("data-id", timeOptions[i].value)
-          newElement.innerHTML = timeOptions[i].nextSibling.textContent
-          timeSelected.appendChild(newElement)
-        } 
-      }
-      for (let i = 0; levelOptions.length > i; i++) {
-        if (levelOptions[i].checked) {
-          const newElement = document.createElement("span")
-          newElement.setAttribute("class", "selectedOption")
-          // 任意のIDをvalueの値で入れておく
-          newElement.setAttribute("data-id", levelOptions[i].value)
-          newElement.innerHTML = levelOptions[i].nextSibling.textContent
-          levelSelected.appendChild(newElement)
-        } 
-      }
-    });
-  </script>
+</div>
 {% endblock content %}
-
+{% block script %}
+<script>
+  const app = Vue.createApp({
+    data() {
+      return {
+        enabled: false,
+        riddle_list: [],
+        page: 1,
+        count: 0,
+        page_count: 0,
+        selectType: [],
+        selectTime: [],
+        selectLevel: [],
+        selectWord: "",
+        selectOrder: "created_at",
+        filterKwargs: "",
+        userId: "{{ user.id }}",
+        typeSet: [
+          {
+            title: "WEB",
+            value: "web",
+          },
+          {
+            title: "LINE",
+            value: "line",
+          },
+        ],
+        timeSet: [
+          {
+            title: "〜15分",
+            value: "10",
+          },
+          {
+            title: "15分〜45分",
+            value: "30",
+          },
+          {
+            title: "45分〜90分",
+            value: "60",
+          },
+          {
+            title: "90分〜180分",
+            value: "120",
+          },
+          {
+            title: "180分〜",
+            value: "300",
+          },
+        ],
+        levelSet: [
+          {
+            title: "初級",
+            value: "1",
+          },
+          {
+            title: "中級",
+            value: "2",
+          },
+          {
+            title: "上級",
+            value: "3",
+          },
+        ],
+        orderSet: [
+          {
+            title: "新着順",
+            value: "created_at"
+          },
+          {
+            title: "難易度順",
+            value: "level"
+          },
+          {
+            title: "プレイ数順",
+            value: "playings"
+          },
+          {
+            title: "評価順",
+            value: "rating"
+          },
+        ]
+      }
+    },
+    //ムスタッシュ記法を変更
+    compilerOptions: {
+      delimiters: ['[[', ']]'],
+    },
+    // HTMLの読み込み完了時に実行される
+    mounted() {
+      this.getRiddleList()
+    },
+    // これは任意の関数
+    methods: {
+      getTypeDisplay(type) {
+        return this.typeSet.find(el => el.value == type).title;
+      },
+      getTimeDisplay(time) {
+        return this.timeSet.find(el => el.value == time).title;
+      },
+      getLevelDisplay(level) {
+        return this.levelSet.find(el => el.value == level).title;
+      },
+      getFilterKwargs() {
+        this.filterKwargs = "?page=" + String(this.page);
+        this.filterKwargs += "&order=" + this.selectOrder;
+        if(this.selectType != []) {
+          for(var type of this.selectType) {
+            this.filterKwargs += "&type=" + type
+          }
+        }
+        if(this.selectTime != []) {
+          for(var time of this.selectTime) {
+            this.filterKwargs += "&time=" + time
+          }
+        }
+        if(this.selectLevel != []) {
+          for(var level of this.selectLevel) {
+            this.filterKwargs += "&level=" + level
+          }
+        }
+        if(this.selectWord != "") {
+          this.filterKwargs += "&word=" + this.selectWord
+        }
+      },
+      getRiddleList() {
+        this.getFilterKwargs();
+        console.log(this.filterKwargs)
+        axios.get(`/api/v2/riddle_list/${this.filterKwargs}`)
+          .then((res) => {
+            console.log(res)
+            this.riddle_list = res.data.results
+            this.count = res.data.count
+            this.page_count = Math.ceil(this.count / 2)
+          })
+      },
+       getPage(page) {
+        this.page = page
+        this.getRiddleList()
+      },
+      async bookmarkRiddle(pk) {
+        const params = ""
+        await fetch(`/api/v2/bookmark/${pk}/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': "{{ csrf_token }}",
+          },
+          body: params
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+        this.getRiddleList();
+      },
+      getBookmarked(riddle) {
+        return riddle.bookmarks.includes(Number(this.userId));
+      }
+    }
+  })
+  app.component('star-rating', VueStarRating.default);
+  app.use(VueChart.default);
+  app.mount('#app');
+</script>
+{% endblock script %}
