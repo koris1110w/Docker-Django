@@ -11,6 +11,8 @@ WORKDIR $APP_HOME
 COPY . $APP_HOME
 
 RUN apt-get update && apt-get upgrade -y
+RUN apt-get install -y nodejs npm
 RUN apt-get install -y libgl1-mesa-dev
+
 RUN pip install --upgrade pip
 RUN pip install -r requirements.txt
