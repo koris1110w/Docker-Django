@@ -13,12 +13,13 @@ class RiddleFilter(filters.FilterSet):
     type = filters.MultipleChoiceFilter(choices=models.TYPE_SET)
     time = filters.MultipleChoiceFilter(choices=models.TIME_SET)
     level = filters.MultipleChoiceFilter(choices=models.LEVEL_SET)
+    creator = filters.NumberFilter()
     word = filters.CharFilter(method='wordFilter')
     order = filters.CharFilter(method='orderFilter')
 
     class Meta:
         model = models.RiddleModel
-        fields = ['type','time','level','word','order',]
+        fields = ['type','time','level','word','order','creator',]
 
     def wordFilter(self,queryset,name,value):
         #ここでOR検索を入れる。fieldsのcustomerNameに入ってきた値を利用

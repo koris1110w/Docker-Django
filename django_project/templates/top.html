@@ -22,19 +22,28 @@
 {% endblock content %}
 {% block script %}
 <script>
+  var slides;
+  if (window.matchMedia('(max-width: 640px)').matches) {
+    slides = 2;
+  } else if (window.matchMedia('(max-width:1024px)').matches) {
+    slides = 4;
+  } else {
+    slides = 5;
+  }
+  $('.slider').slick({
+    infinite: true,
+    slidesToShow: slides,
+    autoplay: true,
+    dots: true,
+  });
+</script>
+<script>
   const app = Vue.createApp({
     data() {
       return {
         riddle_list: [],
-        page: 1,
-        count: 0,
+        riddle_ranking: [],
         page_count: 0,
-        selectType: [],
-        selectTime: [],
-        selectLevel: [],
-        selectWord: "",
-        selectOrder: "",
-        filterKwargs: "",
         userId: "{{ user.id }}",
         typeSet: [
           {
@@ -119,6 +128,7 @@
     },
     // HTMLの読み込み完了時に実行される
     mounted() {
+      this.getRiddleRanking();
       this.getRiddleList();
     },
     // これは任意の関数
@@ -132,56 +142,29 @@
       getLevelDisplay(level) {
         return this.levelSet.find(el => el.value == level).title;
       },
-      getFilterKwargs() {
-        this.filterKwargs = "?page=" + String(this.page);
-        if(this.selectType != []) {
-          for(var type of this.selectType) {
-            if(this.filterKwargs == "") {
-              this.filterKwargs += "?type="
-            }else{
-              this.filterKwargs += "&type="
-            }
-            this.filterKwargs += type
-          }
-        }
-        if(this.selectTime != []) {
-          for(var time of this.selectTime) {
-            if(this.filterKwargs == "") {
-              this.filterKwargs += "?time="
-            }else{
-              this.filterKwargs += "&time="
-            }
-            this.filterKwargs += time
-          }
-        }
-        if(this.selectLevel != []) {
-          for(var level of this.selectLevel) {
-            if(this.filterKwargs == "") {
-              this.filterKwargs += "?level="
-            }else{
-              this.filterKwargs += "&level="
-            }
-            this.filterKwargs += level
-          }
-        }
-        if(this.selectWord != "") {
-          if(this.filterKwargs == "") {
-            this.filterKwargs += "?word="
-          }else{
-            this.filterKwargs += "&word="
-          }
-          this.filterKwargs += this.selectWord
+      getRankingColor(index) {
+        if(index == 1) {
+          return "bg-yellow-400"
+        }else if(index == 2) {
+          return "bg-gray-400"
+        }else if(index == 3) {
+          return "bg-yellow-700"
+        }else{
+          return "bg-gray-700"
         }
       },
+      getRiddleRanking() {
+        axios.get(`/api/v2/ranking/`)
+          .then((res) => {
+            console.log(res)
+            this.riddle_ranking = res.data
+          })
+      },
       getRiddleList() {
-        this.getFilterKwargs();
-        console.log(this.filterKwargs)
-        axios.get(`/api/v2/riddle_list/${this.filterKwargs}`)
+        axios.get(`/api/v2/riddle_list/?order=created_at`)
           .then((res) => {
             console.log(res)
             this.riddle_list = res.data.results
-            this.count = res.data.count
-            this.page_count = Math.ceil(this.count / 2)
           })
       },
       async bookmarkRiddle(pk) {
@@ -203,11 +186,32 @@
         });
         this.getRiddleList();
       },
+      async playingRiddle(pk) {
+        const params = ""
+        await fetch(`/api/v2/playing/${pk}/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': "{{ csrf_token }}",
+          },
+          body: params
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+      },
       getBookmarked(riddle) {
         return riddle.bookmarks.includes(Number(this.userId));
       }
     }
   })
+  for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+    app.component(key, component)
+  }
   app.component('star-rating', VueStarRating.default);
   app.use(ElementPlus);
   app.mount('#app');

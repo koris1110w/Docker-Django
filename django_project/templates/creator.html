@@ -3,15 +3,18 @@
 {% block content %}
 <div class="mt-10 container flex justify-center items-center grid-cols-3">
   <img class="size-[200px] rounded-full" src="{{ creator.image.url }}" alt="Image Description">
-  {% comment %} <div class="flex-shrink-0 relative rounded-xl overflow-hidden w-full sm:w-56 h-64">
-  </div> {% endcomment %}
   <div class="ml-10">
     <h3 class="text-xl font-semibold text-gray-800 group-hover:text-gray-600 dark:text-gray-300 dark:group-hover:text-white">
       {{ creator.name }}
     </h3>
-    <a href="{{ creator.url }}" class="mt-3 py-2 px-3 inline-flex items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
-      クリエイターページへ
-    </a>
+    <el-button
+      type="primary"
+      tag="a"
+      class="text-sm font-semibold h-10 mt-4"
+      href="{{creator.url}}"
+      target="_blank"
+      rel="noopener noreferrer"
+    >クリエイターページへ</el-button>
   </div>
 </div>
 <!-- Card Blog -->
@@ -20,8 +23,182 @@
   <h3 class="text-xl font-semibold text-gray-800 group-hover:text-gray-600 dark:text-gray-300 dark:group-hover:text-white">
     クリエイターの謎解き一覧
   </h3>
+  {% include "riddle_filter.html" %}
   {% include "riddle_list.html" %}
+  {% include "pagination.html" %}
   <!-- End Grid -->
 </div>
 <!-- End Card Blog -->
 {% endblock content %}
+{% block script %}
+<script>
+  const app = Vue.createApp({
+    data() {
+      return {
+        enabled: false,
+        riddle_list: [],
+        page: 1,
+        count: 0,
+        page_count: 0,
+        selectType: [],
+        selectTime: [],
+        selectLevel: [],
+        selectWord: "",
+        selectOrder: "created_at",
+        filterKwargs: "",
+        userId: "{{ user.id }}",
+        typeSet: [
+          {
+            title: "WEB",
+            value: "web",
+          },
+          {
+            title: "LINE",
+            value: "line",
+          },
+        ],
+        timeSet: [
+          {
+            title: "〜15分",
+            value: "10",
+          },
+          {
+            title: "15分〜45分",
+            value: "30",
+          },
+          {
+            title: "45分〜90分",
+            value: "60",
+          },
+          {
+            title: "90分〜180分",
+            value: "120",
+          },
+          {
+            title: "180分〜",
+            value: "300",
+          },
+        ],
+        levelSet: [
+          {
+            title: "初級",
+            value: "1",
+          },
+          {
+            title: "中級",
+            value: "2",
+          },
+          {
+            title: "上級",
+            value: "3",
+          },
+        ],
+        orderSet: [
+          {
+            title: "新着順",
+            value: "created_at"
+          },
+          {
+            title: "難易度順",
+            value: "level"
+          },
+          {
+            title: "プレイ数順",
+            value: "playings"
+          },
+          {
+            title: "評価順",
+            value: "rating"
+          },
+        ]
+      }
+    },
+    //ムスタッシュ記法を変更
+    compilerOptions: {
+      delimiters: ['[[', ']]'],
+    },
+    // HTMLの読み込み完了時に実行される
+    mounted() {
+      this.getRiddleList();
+    },
+    // これは任意の関数
+    methods: {
+      getTypeDisplay(type) {
+        return this.typeSet.find(el => el.value == type).title;
+      },
+      getTimeDisplay(time) {
+        return this.timeSet.find(el => el.value == time).title;
+      },
+      getLevelDisplay(level) {
+        return this.levelSet.find(el => el.value == level).title;
+      },
+      getFilterKwargs() {
+        this.filterKwargs = "?page=" + String(this.page);
+        this.filterKwargs += "&creator=" + "{{ creator.id }}";
+        this.filterKwargs += "&order=" + this.selectOrder;
+        if(this.selectType != []) {
+          for(var type of this.selectType) {
+            this.filterKwargs += "&type=" + type
+          }
+        }
+        if(this.selectTime != []) {
+          for(var time of this.selectTime) {
+            this.filterKwargs += "&time=" + time
+          }
+        }
+        if(this.selectLevel != []) {
+          for(var level of this.selectLevel) {
+            this.filterKwargs += "&level=" + level
+          }
+        }
+        if(this.selectWord != "") {
+          this.filterKwargs += "&word=" + this.selectWord
+        }
+      },
+      getRiddleList() {
+        this.getFilterKwargs();
+        console.log(this.filterKwargs)
+        axios.get(`/api/v2/riddle_list/${this.filterKwargs}`)
+          .then((res) => {
+            console.log(res)
+            this.riddle_list = res.data.results
+            this.count = res.data.count
+            this.page_count = Math.ceil(this.count / 2)
+          })
+      },
+      getPage(page) {
+        this.page = page
+        this.getRiddleList()
+      },
+      async bookmarkRiddle(pk) {
+        const params = ""
+        await fetch(`/api/v2/bookmark/${pk}/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': "{{ csrf_token }}",
+          },
+          body: params
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+        this.getRiddleList();
+      },
+      getBookmarked(riddle) {
+        return riddle.bookmarks.includes(Number(this.userId));
+      }
+    },
+  })
+  for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+    app.component(key, component)
+  };
+  app.component('star-rating', VueStarRating.default);
+  app.use(ElementPlus);
+  app.mount('#app');
+</script>
+{% endblock script %}

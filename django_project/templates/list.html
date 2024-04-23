@@ -2,89 +2,10 @@
 {% load myatag %}
 
 {% block content %}
-<div id="app">
-  <div class="max-w-[85rem] px-6 mx-auto my-5 grid grid-cols-2 lg:grid-cols-6">
-    <!-- ワード検索 -->
-    <div class="cols-span-1 p-2">
-      <el-input
-        v-model="selectWord"
-        placeholder="検索"
-        clearable
-        class="h-10"
-      ></el-input>
-    </div>
-    <!-- タイプ検索-->
-    <div class="cols-span-1 p-2">
-      <el-select
-        multiple
-        v-model="selectType"
-        placeholder="タイプ"
-        size="large"
-      >
-        <el-option
-          v-for="item in typeSet"
-          :key="item.value"
-          :label="item.title"
-          :value="item.value"
-        ></el-option>
-      </el-select>
-    </div>
-    <!-- 時間検索 -->
-    <div class="cols-span-1 p-2">
-      <el-select
-        multiple
-        v-model="selectTime"
-        placeholder="時間"
-        size="large"
-      >
-        <el-option
-          v-for="item in timeSet"
-          :key="item.value"
-          :label="item.title"
-          :value="item.value"
-        ></el-option>
-      </el-select>
-    </div>
-    <!-- 難易度検索 -->
-    <div class="cols-span-1 p-2">
-      <el-select
-        multiple
-        v-model="selectLevel"
-        placeholder="難易度"
-        size="large"
-      >
-        <el-option
-          v-for="item in levelSet"
-          :key="item.value"
-          :label="item.title"
-          :value="item.value"
-        ></el-option>
-      </el-select>
-    </div>
-    <!-- 並び替え -->
-    <div class="cols-span-1 p-2">
-      <el-select
-        v-model="selectOrder"
-        placeholder="並べ替え"
-        size="large"
-      >
-        <el-option
-          v-for="item in orderSet"
-          :key="item.value"
-          :label="item.title"
-          :value="item.value"
-        ></el-option>
-      </el-select>
-    </div>
-    <!-- フィルター -->
-    <div class="cols-span-1 p-2">
-      <el-button type="primary" @click="getRiddleList" class="h-10 w-full">フィルター</el-button>
-    </div>
-  </div>
+<div>
+  {% include "riddle_filter.html" %}
   {% include "riddle_list.html" %}
-  <nav aria-label="ページ送り" class="flex justify-center items-center">
-    <el-pagination background layout="prev, pager, next" :page-count="page_count" @current-change="getPage"></el-pagination>
-  </nav>
+  {% include "pagination.html" %}
 </div>
 {% endblock content %}
 {% block script %}
@@ -176,7 +97,7 @@
     },
     // HTMLの読み込み完了時に実行される
     mounted() {
-      this.getRiddleList()
+      this.getRiddleList();
     },
     // これは任意の関数
     methods: {
@@ -226,6 +147,24 @@
         this.page = page
         this.getRiddleList()
       },
+      async playingRiddle(pk) {
+        const params = ""
+        await fetch(`/api/v2/playing/${pk}/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRFToken': "{{ csrf_token }}",
+          },
+          body: params
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log(data)
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+      },
       async bookmarkRiddle(pk) {
         const params = ""
         await fetch(`/api/v2/bookmark/${pk}/`, {
@@ -250,9 +189,11 @@
       }
     },
   })
+  for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+    app.component(key, component)
+  };
   app.component('star-rating', VueStarRating.default);
   app.use(ElementPlus);
-  app.use(VueChart.default);
   app.mount('#app');
 </script>
 {% endblock script %}

@@ -1,0 +1,78 @@
+<div class="mx-auto my-5 grid grid-cols-2 lg:grid-cols-6">
+  <!-- ワード検索 -->
+  <div class="cols-span-1 p-2">
+    <el-input
+      v-model="selectWord"
+      placeholder="検索"
+      clearable
+      class="h-10"
+    ></el-input>
+  </div>
+  <!-- タイプ検索-->
+  <div class="cols-span-1 p-2">
+    <el-select
+      multiple
+      v-model="selectType"
+      placeholder="タイプ"
+      size="large"
+    >
+      <el-option
+        v-for="item in typeSet"
+        :key="item.value"
+        :label="item.title"
+        :value="item.value"
+      ></el-option>
+    </el-select>
+  </div>
+  <!-- 時間検索 -->
+  <div class="cols-span-1 p-2">
+    <el-select
+      multiple
+      v-model="selectTime"
+      placeholder="時間"
+      size="large"
+    >
+      <el-option
+        v-for="item in timeSet"
+        :key="item.value"
+        :label="item.title"
+        :value="item.value"
+      ></el-option>
+    </el-select>
+  </div>
+  <!-- 難易度検索 -->
+  <div class="cols-span-1 p-2">
+    <el-select
+      multiple
+      v-model="selectLevel"
+      placeholder="難易度"
+      size="large"
+    >
+      <el-option
+        v-for="item in levelSet"
+        :key="item.value"
+        :label="item.title"
+        :value="item.value"
+      ></el-option>
+    </el-select>
+  </div>
+  <!-- 並び替え -->
+  <div class="cols-span-1 p-2">
+    <el-select
+      v-model="selectOrder"
+      placeholder="並べ替え"
+      size="large"
+    >
+      <el-option
+        v-for="item in orderSet"
+        :key="item.value"
+        :label="item.title"
+        :value="item.value"
+      ></el-option>
+    </el-select>
+  </div>
+  <!-- フィルター -->
+  <div class="cols-span-1 p-2">
+    <el-button type="primary" @click="getRiddleList" class="h-10 w-full">フィルター</el-button>
+  </div>
+</div>
