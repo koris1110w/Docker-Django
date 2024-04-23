@@ -3,99 +3,88 @@
 
 {% block content %}
 <div id="app">
-  <div class="max-w-[85rem] px-6 mx-auto mt-5 grid grid-cols-2 lg:grid-cols-6">
+  <div class="max-w-[85rem] px-6 mx-auto my-5 grid grid-cols-2 lg:grid-cols-6">
     <!-- ワード検索 -->
-    <div class="mt-2 pr-2">
-      <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">検索</label>
-      <div class="relative">
-          <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-              <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20">
-                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-              </svg>
-          </div>
-          <input type="search" id="search" v-model="selectWord" class="block w-full p-4 ps-10 text-sm text-gray-900 rounded-lg bg-slate-900 dark:placeholder-gray-400 dark:text-white" placeholder="検索"/>
-      </div>
+    <div class="cols-span-1 p-2">
+      <el-input
+        v-model="selectWord"
+        placeholder="検索"
+        clearable
+        class="h-10"
+      ></el-input>
     </div>
     <!-- タイプ検索-->
-    <div class="relative px-2 cols-span-1 mt-2">
-      <button id="dropdownBgHoverButton" data-dropdown-toggle="dropdownType"
-        class="w-full p-4 text-center inline-flex justify-between items-center border-gray-200 rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
-        type="button">
-        <span>タイプ</span>
-        <span>[[ selectType ]]</span>
-        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-        </svg>
-      </button>
-      <div id="dropdownType" class="absolute hidden z-10 w-48 bg-white rounded-lg shadow dark:bg-slate-900 text-sm text-gray-700 dark:text-gray-200">
-        <ul class="p-3 space-y-3 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownCheckboxButton">
-          <li v-for="item in typeSet" :key="item.value">
-            <div class="flex items-center">
-              <input type="checkbox" v-model="selectType" :value="item.value" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-              <label class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">[[ item.title ]]</label>
-            </div>
-          </li>
-        </ul>
-      </div>
+    <div class="cols-span-1 p-2">
+      <el-select
+        multiple
+        v-model="selectType"
+        placeholder="タイプ"
+        size="large"
+      >
+        <el-option
+          v-for="item in typeSet"
+          :key="item.value"
+          :label="item.title"
+          :value="item.value"
+        ></el-option>
+      </el-select>
     </div>
     <!-- 時間検索 -->
-    <div class="relative px-2 cols-span-1 mt-2">
-      <button id="dropdownBgHoverButton" data-dropdown-toggle="dropdownTime"
-        class="w-full p-4 text-center inline-flex justify-between items-center border-gray-200 rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
-        type="button">
-        <span>時間</span>
-        <span>[[ selectTime ]]</span>
-        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-        </svg>
-      </button>
-      <div id="dropdownTime" class="absolute hidden z-10 w-48 bg-white rounded-lg shadow dark:bg-slate-900 text-sm text-gray-700 dark:text-gray-200">
-        <ul class="p-3 space-y-3 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownCheckboxButton">
-          <li v-for="item in timeSet" :key="item.value">
-            <div class="flex items-center">
-              <input type="checkbox" v-model="selectTime" :value="item.value" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-              <label class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">[[ item.title ]]</label>
-            </div>
-          </li>
-        </ul>
-      </div>
+    <div class="cols-span-1 p-2">
+      <el-select
+        multiple
+        v-model="selectTime"
+        placeholder="時間"
+        size="large"
+      >
+        <el-option
+          v-for="item in timeSet"
+          :key="item.value"
+          :label="item.title"
+          :value="item.value"
+        ></el-option>
+      </el-select>
     </div>
     <!-- 難易度検索 -->
-    <div class="relative px-2 cols-span-1 mt-2">
-      <button id="dropdownBgHoverButton" data-dropdown-toggle="dropdownLevel"
-        class="w-full p-4 text-center inline-flex justify-between items-center border-gray-200 rounded-lg text-sm dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600"
-        type="button">
-        <span>難易度</span>
-        <span>[[ selectLevel ]]</span>
-        <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
-          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
-        </svg>
-      </button>
-      <div id="dropdownLevel" class="absolute hidden z-10 w-48 bg-white rounded-lg shadow dark:bg-slate-900 text-sm text-gray-700 dark:text-gray-200">
-        <ul class="p-3 space-y-3 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownCheckboxButton">
-          <li v-for="item in levelSet" :key="item.value">
-            <div class="flex items-center">
-              <input type="checkbox" v-model="selectLevel" :value="item.value" class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-700 dark:focus:ring-offset-gray-700 focus:ring-2 dark:bg-gray-600 dark:border-gray-500">
-              <label class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">[[ item.title ]]</label>
-            </div>
-          </li>
-        </ul>
-      </div>
+    <div class="cols-span-1 p-2">
+      <el-select
+        multiple
+        v-model="selectLevel"
+        placeholder="難易度"
+        size="large"
+      >
+        <el-option
+          v-for="item in levelSet"
+          :key="item.value"
+          :label="item.title"
+          :value="item.value"
+        ></el-option>
+      </el-select>
     </div>
     <!-- 並び替え -->
-    <div class="cols-span-1 m-2">
-      <select id="order" v-model="selectOrder" class="relative border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:bg-slate-900 dark:text-gray-300 dark:focus:ring-blue-500 dark:focus:border-blue-500">
-        <option v-for="item in orderSet" :key="item.value" :value="item.value">[[ item.title ]]</option>
-      </select>
+    <div class="cols-span-1 p-2">
+      <el-select
+        v-model="selectOrder"
+        placeholder="並べ替え"
+        size="large"
+      >
+        <el-option
+          v-for="item in orderSet"
+          :key="item.value"
+          :label="item.title"
+          :value="item.value"
+        ></el-option>
+      </el-select>
     </div>
-    <div class="relative cols-span-1 p-2">
-      <button type="button" @click="getRiddleList" class="py-2 px-3 h-full w-full inline-flex items-center justify-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
-        絞り込み
-      </button>
+    <!-- フィルター -->
+    <div class="cols-span-1 p-2">
+      <el-button type="primary" @click="getRiddleList" class="h-10 w-full">フィルター</el-button>
     </div>
   </div>
   {% include "riddle_list.html" %}
-  {% include "pagination.html" %}
+  <nav aria-label="ページ送り" class="flex justify-center items-center">
+    <el-pagination background layout="prev, pager, next" :page-count="page_count" @current-change="getPage"></el-pagination>
+  </nav>
 </div>
 {% endblock content %}
 {% block script %}
@@ -233,7 +222,7 @@
             this.page_count = Math.ceil(this.count / 2)
           })
       },
-       getPage(page) {
+      getPage(page) {
         this.page = page
         this.getRiddleList()
       },
@@ -259,9 +248,10 @@
       getBookmarked(riddle) {
         return riddle.bookmarks.includes(Number(this.userId));
       }
-    }
+    },
   })
   app.component('star-rating', VueStarRating.default);
+  app.use(ElementPlus);
   app.use(VueChart.default);
   app.mount('#app');
 </script>

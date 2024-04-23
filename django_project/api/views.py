@@ -11,20 +11,6 @@ from . import serializer
 from . import pagination
 from . import filter
 
-
-class APIHelloView(APIView):
-    permission_classes = [AllowAny]
-    def get(self, *args, **kwargs):
-        return Response(status=200, data={
-            "あいさつ": "hello"
-        })
-
-    def post(self, *args, **kwargs):
-
-        return Response(status=200, data={
-            "あいさつ": "Bye"
-        })
-
 class APIBookMarkView(APIView):
     permission_classes = [AllowAny]
 

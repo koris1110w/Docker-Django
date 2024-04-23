@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<div id="app">
+<div>
   <h3 class="my-4 text-xl font-semibold text-gray-300">
     最新ランキング
   </h3>
@@ -99,7 +99,18 @@
             title: "評価順",
             value: "rating"
           },
-        ]
+        ],
+        options: [
+          {
+            value: 'Option1',
+            label: 'Option1',
+          },
+          {
+            value: 'Option2',
+            label: 'Option2',
+          },
+        ],
+        value: "",
       }
     },
     //ムスタッシュ記法を変更
@@ -108,7 +119,7 @@
     },
     // HTMLの読み込み完了時に実行される
     mounted() {
-      this.getRiddleList()
+      this.getRiddleList();
     },
     // これは任意の関数
     methods: {
@@ -198,7 +209,7 @@
     }
   })
   app.component('star-rating', VueStarRating.default);
-  app.use(VueChart.default);
+  app.use(ElementPlus);
   app.mount('#app');
 </script>
 {% endblock script %}
