@@ -30,15 +30,30 @@ services:
       env_file:
          - ./.env.prod
 
-   nginx:
-      build: ./nginx
+   # nginx:
+   #    build: ./nginx
+   #    volumes:
+   #       - static_volume:/usr/src/app/static
+   #       - media_volume:/usr/src/app/media
+   #    ports:
+   #       - 80:80
+   #    depends_on:
+   #       - web    
+   
+   https-portal:
+      image: steveltn/https-portal:1
+      ports:
+         - "80:80"
+         - "443:443"
+      environment:
+         DOMAINS: "nazotokidb.com"
+         STAGE: "production"
       volumes:
+         - ./nginx/nazotokidb.com.ssl.conf.erb:/var/lib/nginx-conf/hello.com.ssl.conf.erb:ro
          - static_volume:/usr/src/app/static
          - media_volume:/usr/src/app/media
-      ports:
-         - 80:80
       depends_on:
-         - web    
+         - web  
 
 volumes:
    postgres_data:
