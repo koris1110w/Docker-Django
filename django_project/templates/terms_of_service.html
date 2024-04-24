@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load myatag %}
+
+{% block content %}
+{% endblock content %}
+{% block script %}
+<script>
+  const app = Vue.createApp({
+    data() {
+      return {
+      }
+    },
+    //ムスタッシュ記法を変更
+    compilerOptions: {
+      delimiters: ['[[', ']]'],
+    },
+    // HTMLの読み込み完了時に実行される
+    mounted() {
+    },
+    // これは任意の関数
+    methods: {
+    },
+  })
+  app.use(ElementPlus);
+  app.mount('#app');
+</script>
+{% endblock script %}

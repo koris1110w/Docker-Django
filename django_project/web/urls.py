@@ -32,6 +32,8 @@ urlpatterns = [
     path('bookmark/<int:pk>', views.bookmarkfunc, name='bookmark'),
     path('removebookmark/<int:pk>', views.removebookmarkfunc, name='removebookmark'),
     path('mypage/', views.MyPageView.as_view(), name='mypage'),
+    path('privacy_policy/', views.PrivacyPolicyView.as_view(), name='privacy_policy'),
+    path('terms_of_service/', views.TermsOfServiceView.as_view(), name='terms_of_service'),
     path('test/', views.TestView.as_view(), name='test'),
 
 

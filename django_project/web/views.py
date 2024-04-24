@@ -443,3 +443,8 @@ def bookmark_request(request, pk):
         object.save()
         return JsonResponse({'status': 'success', 'is_add': False}, status=200)
 
+class PrivacyPolicyView(TemplateView):
+    template_name = 'privacy_policy.html'
+
+class TermsOfServiceView(TemplateView):
+    template_name = 'terms_of_service.html'
