@@ -49,7 +49,7 @@ services:
          DOMAINS: "nazotokidb.com"
          STAGE: "production"
       volumes:
-         - ./nginx/nazotokidb.com.ssl.conf.erb:/var/lib/nginx-conf/hello.com.ssl.conf.erb:ro
+         - ./nginx/nazotokidb.com.ssl.conf.erb:/var/lib/nginx-conf/nazotokidb.com.ssl.conf.erb:ro
          - static_volume:/usr/src/app/static
          - media_volume:/usr/src/app/media
       depends_on:
