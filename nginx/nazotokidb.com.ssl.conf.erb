@@ -1,4 +1,4 @@
-upstream backend {
+upstream project {
     server web:8000;
 }
 
@@ -19,34 +19,15 @@ server {
 
     ssl_dhparam <%= dhparam_path %>;
 
-    location /static {
-        alias /code/static_root;
+    location /static/ {
+       alias /usr/src/app/static/;
     }
-
-    location /media {
-        alias /code/media;
+    location /media/ {
+        alias /usr/src/app/media/;
     }
-
-    location /api {
-        proxy_pass http://backend;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $http_host;
-        proxy_redirect off;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-
-    location /admin {
-        proxy_pass http://backend;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $http_host;
-        proxy_redirect off;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
-
     location / {
-        proxy_pass http://frontend;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header Host $http_host;
-        proxy_redirect off;
-        proxy_set_header X-Forwarded-Proto $scheme;
-    }
+       proxy_pass http://project;
+       proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+       proxy_set_header Host $host;
+       proxy_redirect off;
+   }

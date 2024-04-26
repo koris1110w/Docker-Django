@@ -46,7 +46,7 @@ services:
          - "80:80"
          - "443:443"
       environment:
-         DOMAINS: "nazotokidb.com"
+         DOMAINS: "nazotokidb.com -> http://localhost:8000"
          STAGE: "production"
       volumes:
          - ./nginx/nazotokidb.com.ssl.conf.erb:/var/lib/nginx-conf/nazotokidb.com.ssl.conf.erb:ro
